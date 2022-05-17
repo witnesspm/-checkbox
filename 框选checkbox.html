@@ -1,0 +1,169 @@
+<!DOCTYPE html >
+<html >
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+#rectBox
+{
+border:2px dashed  #000000;
+position:absolute;
+}
+* {
+            /* moz-user-select: -moz-none; */
+            -moz-user-select: none;
+            -o-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+</style>
+<head>
+<title>框选checkbox</title>
+<script type="text/javascript">
+function Rect()
+{
+
+this.doc = document.documentElement;
+this.obj= document.getElementsByName("a")
+if(!this.doc) return;
+this.startX = '';
+this.startY = '';
+this.rect = null;
+rectSelf = this;
+}
+Rect.prototype.down = function(e)
+{
+    for(let i=0;i<18;i++){
+ 
+ rectSelf.obj[i].checked=false
+
+}
+var e = e?e:window.event;
+rectSelf.startX = e.clientX?e.clientX + document.body.scrollLeft:e.pageX;
+rectSelf.startY = e.clientY?e.clientY + document.body.scrollTop:e.pageY;
+rectSelf.showRect(true);
+}
+Rect.prototype.up = function(e)
+{
+    
+rectSelf.rectBox.style.width = '0px';
+rectSelf.rectBox.style.height = '0px';
+rectSelf.showRect(false);
+}
+Rect.prototype.move = function(e)
+{
+if(rectSelf.rectBox)
+{
+var currentX = e.clientX?e.clientX + rectSelf.doc.scrollLeft:e.pageX;
+var currentY = e.clientY?e.clientY + rectSelf.doc.scrollTop:e.pageY;
+rectSelf.rectBox.style.width = Math.abs(currentX - rectSelf.startX) + 'px';
+rectSelf.rectBox.style.height = Math.abs(currentY - rectSelf.startY) + 'px';
+if(currentX - rectSelf.startX < 0)
+{
+rectSelf.rectBox.style.left = currentX + 'px';
+}
+if(currentY - rectSelf.startY < 0)
+{
+rectSelf.rectBox.style.top = currentY + 'px';
+}
+//document.title = "left:"+currentX + 'px '+"top:"+currentY + 'px ';
+}
+
+
+const cL=rectSelf.rectBox.offsetLeft;
+const cR=rectSelf.rectBox.offsetTop;
+const cLw=parseInt(rectSelf.rectBox.offsetLeft)+parseInt(rectSelf.rectBox.style.width);
+const cRh=parseInt(rectSelf.rectBox.offsetTop)+parseInt(rectSelf.rectBox.style.height);
+console.log(cL+','+cLw+','+cR+','+cRh)
+for(let i=0;i<18;i++){
+    const boxL=parseInt(rectSelf.obj[i].offsetLeft)+10;
+    const boxR=parseInt(rectSelf.obj[i].offsetTop)+10;
+    if((cL<boxL&&boxL<cLw)&&(cR<boxR&&boxR<cRh)){
+        rectSelf.obj[i].checked=true
+    }
+}
+
+
+
+
+}
+Rect.prototype.showRect = function(bool)
+{
+if(bool)
+{
+if(!this.rectBox)
+{
+this.rectBox = document.createElement("div");
+this.rectBox.id = "rectBox";
+document.body.appendChild(this.rectBox);
+}
+this.rectBox.style.display = "block";
+this.rectBox.style.left = this.startX + 'px';
+this.rectBox.style.top = this.startY + 'px'; 
+this.addEventListener(this.doc , 'mousemove' , this.move);
+}
+else
+{
+   
+
+if(this.rectBox)
+{
+this.rectBox.style.display = "none";
+}
+this.removeEventListener(this.doc , 'mousemove' , this.move);
+}
+}
+Rect.prototype.addEventListener = function(o,e,l) 
+{
+    
+if (o.addEventListener) {
+o.addEventListener(e,l,false);
+} else if (o.attachEvent) {
+o.attachEvent('on'+e,function() {
+l(window.event);
+});
+}
+}
+Rect.prototype.removeEventListener = function(o,e,l) 
+{
+    
+if (o.removeEventListener) {
+o.removeEventListener(e,l,false);
+} else if (o.detachEvent) {
+o.detachEvent('on'+e,function() {
+l(window.event);
+});
+}
+}
+window.onload = function()
+{
+var oRect = new Rect();
+oRect.addEventListener(oRect.doc , 'mousedown' , oRect.down);
+oRect.addEventListener(oRect.doc , 'mouseup' , oRect.up);
+
+}
+</script>
+</head>
+<body>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <br/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <br/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+    <input name="a" type="checkbox"/>
+</body>
+</html>
